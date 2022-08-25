@@ -1,9 +1,13 @@
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart' as icons;
+import 'package:flutter_desctop/core/const.dart';
 import 'package:flutter_desctop/view/main/home/home_view.dart';
 import 'package:flutter_desctop/view/main/profile/profile_view.dart';
 import 'package:flutter_desctop/view/main/setting/setting_view.dart';
 import 'package:window_manager/window_manager.dart';
+
+import '../../core/widgets.dart';
 
 class MainView extends StatefulWidget {
   const MainView({Key? key}) : super(key: key);
@@ -59,21 +63,30 @@ class _MainViewState extends State<MainView> with WindowListener {
         ],
         displayMode: PaneDisplayMode.compact,
       ),
-      content: NavigationBody.builder(
-        index: index,
-        itemBuilder: (context, index) {
-          return listViews[index];
-        },
+      content: Stack(
+        children: [
+          NavigationBody.builder(
+            index: index,
+            itemBuilder: (context, index) {
+              return listViews[index];
+            },
+          ),
+          Row(
+            children: const [
+              Spacer(),
+              CustomTitleBarButtons(isCloseButton: false),
+              CustomTitleBarButtons(isCloseButton: true),
+            ],
+          ),
+        ],
       ),
     );
   }
 
   @override
-  void onWindowClose() async{
-     bool _isPreventClose = await windowManager.isPreventClose();
-     if(_isPreventClose){
-
-     }
+  void onWindowClose() async {
+    bool isPreventClose = await windowManager.isPreventClose();
+    if (isPreventClose) {}
     super.onWindowClose();
   }
 }

@@ -9,10 +9,10 @@ void main() async {
   await windowManager.ensureInitialized();
   windowManager.waitUntilReadyToShow().then((_) async {
     await windowManager.setTitle("Danil & Jasco");
-    await windowManager.setTitleBarStyle(TitleBarStyle.normal);
+    await windowManager.setTitleBarStyle(TitleBarStyle.hidden);
     await windowManager.setBackgroundColor(Colors.transparent);
-    await windowManager.setSize(const Size(955, 645));
-    await windowManager.setMinimumSize(const Size(955, 645));
+    await windowManager.setSize(const Size(670, 560));
+    await windowManager.setMinimumSize(const Size(670, 560));
     await windowManager.center();
     await windowManager.show();
     await windowManager.setSkipTaskbar(false);
@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FluentApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,
         scaffoldBackgroundColor: mainColorBackground,

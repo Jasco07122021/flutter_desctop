@@ -1,12 +1,29 @@
-import 'dart:developer';
 import 'dart:io';
 
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 
 class HomeProvider extends ChangeNotifier {
   double rating = 0.0;
   bool isLoading = false;
   bool isConnected = false;
+  bool isHoverCity = false;
+  bool isHoverPowerButton = false;
+
+  bool openServerView = false;
+
+  void updateNavigator(bool value){
+    openServerView = value;
+    notifyListeners();
+  }
+
+  void updateHoverCityOrPowerButton(bool isHovered, bool isCity) {
+    if (isCity) {
+      isHoverCity = isHovered;
+    } else {
+      isHoverPowerButton = isHovered;
+    }
+    notifyListeners();
+  }
 
   void updateRating(double value) {
     rating = value;

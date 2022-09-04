@@ -1,10 +1,8 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:fluent_ui/fluent_ui.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart' as icons;
+import 'package:flutter/material.dart';
 import 'package:flutter_desctop/core/const.dart';
-import 'package:flutter_desctop/view/main/home/home_view.dart';
-import 'package:flutter_desctop/view/main/profile/profile_view.dart';
-import 'package:flutter_desctop/view/main/setting/setting_view.dart';
+import 'package:flutter_desctop/viewModel/main/main_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
 
 import '../../core/widgets.dart';
@@ -17,15 +15,6 @@ class MainView extends StatefulWidget {
 }
 
 class _MainViewState extends State<MainView> with WindowListener {
-  int index = 0;
-  final viewKey = GlobalKey();
-
-  List<Widget> listViews = const [
-    HomeView(),
-    ProfileView(),
-    SettingView(),
-  ];
-
   @override
   void initState() {
     windowManager.addListener(this);
@@ -40,46 +29,9 @@ class _MainViewState extends State<MainView> with WindowListener {
 
   @override
   Widget build(BuildContext context) {
-    return NavigationView(
-      key: viewKey,
-      pane: NavigationPane(
-        selected: index,
-        onChanged: (v) {
-          setState(() => index = v);
-        },
-        items: [
-          PaneItem(
-            icon: const Icon(FluentIcons.home),
-            title: const Text("Home"),
-          ),
-          PaneItem(
-            icon: const Icon(icons.FluentIcons.person_16_regular),
-            title: const Text("Profile"),
-          ),
-          PaneItem(
-            icon: const Icon(icons.FluentIcons.settings_16_filled),
-            title: const Text("Setting"),
-          ),
-        ],
-        displayMode: PaneDisplayMode.compact,
-      ),
-      content: Stack(
-        children: [
-          NavigationBody.builder(
-            index: index,
-            itemBuilder: (context, index) {
-              return listViews[index];
-            },
-          ),
-          Row(
-            children: const [
-              Spacer(),
-              CustomTitleBarButtons(isCloseButton: false),
-              CustomTitleBarButtons(isCloseButton: true),
-            ],
-          ),
-        ],
-      ),
+    return ChangeNotifierProvider(
+      create: (_) => MainProvider(),
+      builder: (context, _) => const _MainView(),
     );
   }
 
@@ -88,5 +40,37 @@ class _MainViewState extends State<MainView> with WindowListener {
     bool isPreventClose = await windowManager.isPreventClose();
     if (isPreventClose) {}
     super.onWindowClose();
+  }
+}
+
+class _MainView extends StatelessWidget {
+  const _MainView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: mainColorBackground,
+      body: Column(
+        children: [
+          WindowTitleBarBox(
+            child: Row(
+              children: [
+                Expanded(child: MoveWindow()),
+                const CustomTitleBarButtons(isCloseButton: false),
+                const CustomTitleBarButtons(isCloseButton: true),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Selector<MainProvider, int>(
+              selector: (_, bloc) => bloc.index,
+              builder: (context, state, _) =>
+                  context.read<MainProvider>().listViews[state],
+            ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: const BottomNavBar(),
+    );
   }
 }

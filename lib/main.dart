@@ -1,23 +1,25 @@
-import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter_desctop/view/main/main_view.dart';
-import 'package:window_manager/window_manager.dart';
+import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_desctop/view/splash/splash_view.dart';
+import 'package:flutter_desctop/viewModel/user_provider.dart';
+import 'package:provider/provider.dart';
 
 import 'core/const.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await windowManager.ensureInitialized();
-  windowManager.waitUntilReadyToShow().then((_) async {
-    await windowManager.setTitle("Danil & Jasco");
-    await windowManager.setTitleBarStyle(TitleBarStyle.hidden);
-    await windowManager.setBackgroundColor(Colors.transparent);
-    await windowManager.setSize(const Size(670, 560));
-    await windowManager.setMinimumSize(const Size(670, 560));
-    await windowManager.center();
-    await windowManager.show();
-    await windowManager.setSkipTaskbar(false);
-  });
+void main() {
+  registerSingletons();
   runApp(const MyApp());
+  doWhenWindowReady(() {
+    final win = appWindow;
+    const initialSize = Size(350, 720);
+    const maxSize = Size(350, 720);
+    win.maxSize = maxSize;
+    win.minSize = initialSize;
+    win.size = initialSize;
+    win.alignment = Alignment.center;
+    win.title = "Custom window with Flutter";
+    win.show();
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -26,18 +28,35 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return FluentApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: mainColorBackground,
-        navigationPaneTheme: NavigationPaneThemeData(
-          animationDuration: const Duration(milliseconds: 300),
-          backgroundColor: navigationViewBackground,
-          iconPadding: const EdgeInsets.symmetric(horizontal: 10.0),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          brightness: Brightness.dark,
+          scaffoldBackgroundColor: mainColorBackground,
+          appBarTheme: AppBarTheme(
+            backgroundColor: mainColorBackground,
+            elevation: 0,
+          ),
+        ),
+        home: Scaffold(
+          body: WindowBorder(
+            color: mainColorBackground,
+            width: 1,
+            child: const SplashView(),
+          ),
         ),
       ),
-      home: const MainView(),
     );
   }
 }
+
+void registerSingletons() {
+  // Top level app controller
+  // GetIt.I.registerLazySingleton<StyleTextCustom>(() => StyleTextCustom());
+}
+
+// StyleTextCustom get styleTextCustom => GetIt.I.get<StyleTextCustom>();

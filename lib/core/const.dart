@@ -1,4 +1,4 @@
-import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter/material.dart';
 
-Color mainColorBackground = const Color(0xFF031837);
+Color mainColorBackground = const Color(0xFF10182d);
 Color navigationViewBackground = const Color(0xFF042048);

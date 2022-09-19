@@ -1,7 +1,9 @@
-import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_desctop/core/const.dart';
+import 'package:flutter_desctop/core/enums.dart';
+import 'package:flutter_desctop/main.dart';
 import 'package:flutter_desctop/viewModel/main/main_provider.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -48,19 +50,13 @@ class _MainView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Logger().i("token => ${localDB.getString(LocalDBEnum.token.name)}");
+    Logger().i("deviceId => ${localDB.getString(LocalDBEnum.deviceId.name)}");
     return Scaffold(
       backgroundColor: mainColorBackground,
       body: Column(
         children: [
-          WindowTitleBarBox(
-            child: Row(
-              children: [
-                Expanded(child: MoveWindow()),
-                const CustomTitleBarButtons(isCloseButton: false),
-                const CustomTitleBarButtons(isCloseButton: true),
-              ],
-            ),
-          ),
+          const CustomTitleBarBox(),
           Expanded(
             child: Selector<MainProvider, int>(
               selector: (_, bloc) => bloc.index,

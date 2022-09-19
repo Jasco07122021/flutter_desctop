@@ -1,7 +1,26 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_desctop/model/network_model/user_registration_model.dart';
 import 'package:flutter_desctop/view/main/main_view.dart';
+import 'package:flutter_desctop/viewModel/splash/splash_provider.dart';
+import 'package:flutter_desctop/viewModel/user_provider.dart';
+import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
+
+import '../../core/const.dart';
+
+class CheckUserView extends StatelessWidget {
+  const CheckUserView({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => SplashProvider(),
+      builder: (context, _) => const SplashView(),
+    );
+  }
+}
 
 class SplashView extends StatefulWidget {
   const SplashView({Key? key}) : super(key: key);
@@ -21,10 +40,24 @@ class _SplashViewState extends State<SplashView> {
       });
     });
     Timer(
-      const Duration(milliseconds: 3000),
-      () {
-        Navigator.of(context).pushReplacement(
-          SlideTransitionAnimation(const MainView()),
+      const Duration(milliseconds: 700),
+      () async {
+        context.read<SplashProvider>().checkSystemData().then((value) {
+          if (value != null) {
+            context.read<UserProvider>().setSystemData = value;
+          }
+        });
+        context.read<SplashProvider>().checkUserAuth().then(
+          (value) {
+            if (value.runtimeType == UserRegister) {
+              context.read<UserProvider>().setUser = value;
+            } else if (value.runtimeType == String) {
+              context.read<UserProvider>().setDevice = value;
+            }
+            Navigator.of(context).pushReplacement(
+              SlideTransitionAnimation(const MainView()),
+            );
+          },
         );
       },
     );
@@ -33,6 +66,7 @@ class _SplashViewState extends State<SplashView> {
 
   @override
   Widget build(BuildContext context) {
+    Logger().i("SplashView");
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Stack(
@@ -42,7 +76,7 @@ class _SplashViewState extends State<SplashView> {
             curve: Curves.fastLinearToSlowEaseIn,
             width: _a ? size.width : 0,
             height: size.height,
-            color: Colors.blue,
+            color: mainColorBackground,
           ),
           Center(
             child: Image.asset(

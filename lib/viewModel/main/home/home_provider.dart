@@ -71,7 +71,6 @@ class HomeProvider extends ChangeNotifier {
         if(status[0] == "C"){
           await writePowerShell("rasdial NoLogin /d");
           return;
-
         }
         break;
       }

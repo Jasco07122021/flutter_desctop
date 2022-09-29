@@ -85,4 +85,18 @@ class UserApiRepository {
       return null;
     }
   }
+
+  Future<bool> deleteUser() async {
+    try {
+      String t = "/api/v1/user/";
+      var response = await sessionApi.generalRequestDelete(url: t);
+      if (response.statusCode == 200) {
+        return true;
+      }
+      return false;
+    } catch (ex) {
+      Logger().e(ex.toString());
+      return false;
+    }
+  }
 }

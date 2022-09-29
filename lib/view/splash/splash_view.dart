@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_desctop/core/enums.dart';
+import 'package:flutter_desctop/main.dart';
 import 'package:flutter_desctop/model/network_model/user_registration_model.dart';
 import 'package:flutter_desctop/view/main/main_view.dart';
 import 'package:flutter_desctop/viewModel/splash/splash_provider.dart';
@@ -51,8 +53,10 @@ class _SplashViewState extends State<SplashView> {
           (value) {
             if (value.runtimeType == UserRegister) {
               context.read<UserProvider>().setUser = value;
+              context.read<UserProvider>().setLogin = true;
             } else if (value.runtimeType == String) {
               context.read<UserProvider>().setDevice = value;
+              context.read<UserProvider>().setLogin = false;
             }
             Navigator.of(context).pushReplacement(
               SlideTransitionAnimation(const MainView()),

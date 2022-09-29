@@ -17,6 +17,10 @@ class ProfileProvider extends ChangeNotifier {
   TextEditingController pinCodeEmail = TextEditingController();
 
   List<Map<String, TextEditingController>> list = [];
+  int hoverBox = 0;
+  bool showCancellationBox = false;
+
+  String navigateItem = "";
 
   bool loading = false;
   String deviceId = localDB.getString(LocalDBEnum.deviceId.name)!;
@@ -37,6 +41,9 @@ class ProfileProvider extends ChangeNotifier {
       notifyListeners();
       final result = await subscriptionApi.getSubscription();
       if (result != null) {
+        showCancellationBox = true;
+        notifyListeners();
+
         DateTime time = DateTime.parse(result.expiredAt!);
         DateTime newTime = DateTime(time.year, time.month, time.day + 3);
         String newDate = DateFormat("dd.MM.yyyy").format(newTime);
@@ -131,6 +138,30 @@ class ProfileProvider extends ChangeNotifier {
       {"Дата оконачния плана": dateController},
     ]);
     return list;
+  }
+
+  void updateHover(int index) {
+    if (hoverBox != index) {
+      hoverBox = index;
+      notifyListeners();
+    }
+  }
+
+  void updateNavigate(String data) {
+    navigateItem = data;
+    notifyListeners();
+  }
+
+  Future<bool> deleteUser() async {
+    loading = true;
+    notifyListeners();
+    final response = await userApi.deleteUser();
+    if (response) {
+      await localDB.clear();
+    }
+    loading = false;
+    notifyListeners();
+    return response;
   }
 
   @override

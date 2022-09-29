@@ -19,6 +19,8 @@ enum LocalDBEnum {
 
 enum StyleTextEnum {
   bodyHeaderText,
+  bodyTitleText,
+  bodySubTitleText,
   bodyMiddleHeaderText,
   bodyMiddleBodyText,
   bottomSheetHeaderText,

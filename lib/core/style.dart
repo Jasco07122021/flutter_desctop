@@ -17,6 +17,15 @@ class StyleTextCustom {
           fontSize: 30,
           fontWeight: FontWeight.bold,
         );
+      case StyleTextEnum.bodyTitleText:
+        return const TextStyle(
+          fontSize: 17,
+          fontWeight: FontWeight.bold,
+        );
+      case StyleTextEnum.bodySubTitleText:
+        return const TextStyle(
+          fontSize: 14,
+        );
       case StyleTextEnum.bottomSheetHeaderText2:
         return const TextStyle(
           fontSize: 22,
@@ -35,6 +44,7 @@ class StyleTextCustom {
           fontWeight: FontWeight.bold,
           fontSize: 14,
         );
+
     }
   }
 }

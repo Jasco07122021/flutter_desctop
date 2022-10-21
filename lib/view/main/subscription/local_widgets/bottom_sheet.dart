@@ -30,7 +30,7 @@ class BottomSheetSubscriptionView extends StatelessWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-               Text("${"select_plan_price_title".tr()}:"),
+               Text("select_plan_price_title".tr()),
               const SizedBox(width: 10),
               ClipRRect(
                 borderRadius: BorderRadius.circular(5),
@@ -108,13 +108,13 @@ class BottomSheetSubscriptionView extends StatelessWidget {
                       dense: true,
                       contentPadding: const EdgeInsets.symmetric(horizontal: 8),
                       title: Text(
-                        bankCard.title,
+                        bankCard.title.tr(),
                         style: const TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      subtitle: Text(bankCard.subtitle),
+                      subtitle: Text(bankCard.subtitle.tr()),
                     ),
                   ),
                 ),

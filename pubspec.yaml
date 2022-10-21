@@ -13,6 +13,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations: # Add this line
+    sdk: flutter
 
   cupertino_icons: ^1.0.5
   font_awesome_flutter: ^10.2.1

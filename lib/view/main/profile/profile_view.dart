@@ -76,7 +76,7 @@ class _ProfileViewBody extends StatelessWidget {
                     visible: context.watch<UserProvider>().isLogged,
                     child: _boxField(
                       context.read<ProfileProvider>().updateList()[i],
-                      context,
+                      // context,
                     ),
                   ),
                 const SizedBox(height: 20),
@@ -235,7 +235,7 @@ class _ProfileViewBody extends StatelessWidget {
 
   _boxField(
     Map<String, TextEditingController> json,
-    BuildContext context,
+    // BuildContext context,
   ) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
@@ -248,7 +248,7 @@ class _ProfileViewBody extends StatelessWidget {
             style: StyleTextCustom.setStyleByEnum(
               StyleTextEnum.bodyMiddleHeaderText,
             ),
-          ),
+          ).tr(),
           const SizedBox(height: 5),
           TextField(
             controller: json.values.first,

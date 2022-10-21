@@ -33,14 +33,13 @@ Future<void> main() async {
   await GoogleSignInDart.register(clientId: AuthType.Google.clientId);
   runApp(EasyLocalization(
     child: MyApp(),
-
     supportedLocales: [
       Locale("ch", 'CH'),
       Locale("ru", 'RU'),
-      Locale("us", 'US'),
+      Locale("en", 'US'),
     ],
     path: 'assets/languages',
-    fallbackLocale: Locale('us', 'US'),
+    fallbackLocale: const Locale('en', 'US'),
   ));
   doWhenWindowReady(() {
     final win = appWindow;

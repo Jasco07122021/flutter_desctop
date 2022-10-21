@@ -1,4 +1,4 @@
-package com.example.flutter_desctop
+package flutter.matreshka.vpn
 
 import io.flutter.embedding.android.FlutterActivity
 

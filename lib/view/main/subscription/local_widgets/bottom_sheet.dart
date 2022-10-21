@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_desctop/core/extensions.dart';
 import 'package:flutter_desctop/core/style.dart';
@@ -23,13 +24,13 @@ class BottomSheetSubscriptionView extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           CustomBottomSheetHeaderWithCloseButton(
-            headerText: "${tariffItem.name} премиум",
+            headerText: "${tariffItem.name}" "premium".tr(),
           ),
           const SizedBox(height: 25),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text("Стоимость:"),
+               Text("${"select_plan_price_title".tr()}:"),
               const SizedBox(width: 10),
               ClipRRect(
                 borderRadius: BorderRadius.circular(5),
@@ -125,7 +126,7 @@ class BottomSheetSubscriptionView extends StatelessWidget {
             builder: (context, state, _) => TextField(
               controller: state,
               decoration:
-                  StyleTextField.setStyleByTextField("Введите промокод"),
+                  StyleTextField.setStyleByTextField("enter_promo_code".tr()),
             ),
           ),
         ],

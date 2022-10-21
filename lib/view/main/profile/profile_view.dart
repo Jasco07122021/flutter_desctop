@@ -1,20 +1,18 @@
 import 'dart:math';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_desctop/core/const.dart';
 import 'package:flutter_desctop/core/extensions.dart';
 import 'package:flutter_desctop/core/style.dart';
 import 'package:flutter_desctop/core/widgets.dart';
-import 'package:flutter_desctop/main.dart';
 import 'package:flutter_desctop/view/splash/splash_view.dart';
 import 'package:flutter_desctop/viewModel/main/profile/profile_provider.dart';
 import 'package:flutter_desctop/viewModel/user_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/enums.dart';
-import 'local_view/qr_code_view.dart';
-import 'local_view/referral_system_view.dart';
 
 class ProfileView extends StatelessWidget {
   const ProfileView({Key? key}) : super(key: key);
@@ -22,32 +20,11 @@ class ProfileView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => ProfileProvider(context),
+      create: (context) => ProfileProvider(context, false),
       builder: (context, _) => Builder(builder: (context) {
         context.read<ProfileProvider>().initState(context);
-        return const _ProfileView();
+        return const _ProfileViewBody();
       }),
-    );
-  }
-}
-
-class _ProfileView extends StatelessWidget {
-  const _ProfileView({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Selector<ProfileProvider, String>(
-      selector: (_, bloc) => bloc.navigateItem,
-      builder: (context, state, _) => Navigator(
-        pages: [
-          const MaterialPage(child: _ProfileViewBody()),
-          if (state == "QrCodeView") const MaterialPage(child: QrCodeView()),
-        ],
-        onPopPage: (route, result) {
-          context.read<ProfileProvider>().updateNavigate("");
-          return route.didPop(result);
-        },
-      ),
     );
   }
 }
@@ -71,7 +48,7 @@ class _ProfileViewBody extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Профиль",
+                      "profile_header".tr(),
                       style: StyleTextCustom.setStyleByEnum(
                         StyleTextEnum.bodyHeaderText,
                       ),
@@ -110,15 +87,9 @@ class _ProfileViewBody extends StatelessWidget {
                     spacing: 10,
                     children: [
                       _boxColor(
-                        color: Colors.blue,
-                        index: 0,
-                        text: "Сканировать QR код",
-                        context: context,
-                      ),
-                      _boxColor(
                         color: Colors.yellow,
                         index: 1,
-                        text: "Реферальная программа",
+                        text: "referral_program".tr(),
                         context: context,
                       ),
                       if (context.select(
@@ -126,19 +97,19 @@ class _ProfileViewBody extends StatelessWidget {
                         _boxColor(
                           color: Colors.green,
                           index: 2,
-                          text: "Отмена подписки",
+                          text: "cancellation_of_a_subscription".tr(),
                           context: context,
                         ),
                       _boxColor(
                         color: Colors.red,
                         index: 3,
-                        text: "Удалить аккаунт",
+                        text: "delete_account".tr(),
                         context: context,
                       ),
                       _boxColor(
                         color: Colors.purple,
                         index: 4,
-                        text: "Выйти\n",
+                        text: "exit".tr(),
                         context: context,
                       )
                     ],
@@ -168,15 +139,18 @@ class _ProfileViewBody extends StatelessWidget {
       },
       child: GestureDetector(
         onTap: () async {
-          if(index == 0){
-            context.read<ProfileProvider>().updateNavigate("QrCodeView");
-            return;
-          }
+          // if (index == 0) {
+          //   final userProvider = context.read<UserProvider>();
+          //   context.read<ProfileProvider>().openQrCode(userProvider.user!.id);
+          //   return;
+          // }
           if (index == 3) {
             await context.read<ProfileProvider>().deleteUser().then(
               (value) {
                 if (value) {
                   context.read<UserProvider>().setUser = null;
+                  context.read<UserProvider>().setDevice = null;
+                  context.read<UserProvider>().setLogin = false;
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(

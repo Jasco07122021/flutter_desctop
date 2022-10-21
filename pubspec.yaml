@@ -17,6 +17,7 @@ dependencies:
   cupertino_icons: ^1.0.5
   font_awesome_flutter: ^10.2.1
   google_fonts: ^3.0.1
+  easy_localization: ^3.0.1
 
   provider: ^6.0.3
   get_it: ^7.2.0
@@ -27,14 +28,14 @@ dependencies:
   logger: ^1.1.0
 
   http: ^0.13.5
+  dart_ping: ^7.0.2
 
+  shimmer: ^2.0.0
   flutter_svg: ^1.1.5
   intl: ^0.17.0
   oktoast: ^3.3.0
   percent_indicator: ^4.2.2
   octo_image: ^1.0.2
-
-
 
   shared_preferences: ^2.0.15
   device_info_plus: ^4.1.2
@@ -42,6 +43,8 @@ dependencies:
 
   url_launcher: ^6.1.5
   url_launcher_windows: ^3.0.1
+
+  stomp_dart_client: ^0.4.4
 
   google_sign_in_dartio: ^0.2.1
 
@@ -51,6 +54,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  change_app_package_name: ^1.1.0
 
   flutter_lints: ^2.0.0
 
@@ -65,3 +69,4 @@ flutter:
     - assets/icons/
     - assets/images/
     - assets/flags/
+    - assets/languages/

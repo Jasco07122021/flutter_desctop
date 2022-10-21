@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/const.dart';
@@ -83,7 +84,7 @@ class ProfileAlertDialog extends StatelessWidget {
           ),
           const SizedBox(height: 20),
           CustomMaterialButton(
-            text: "Продолжить",
+            text: "proceed".tr(),
             onPress: onPress,
             color: Colors.blue,
           ),

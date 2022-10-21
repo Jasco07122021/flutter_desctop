@@ -1,5 +1,8 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_desctop/core/extensions.dart';
 import 'package:flutter_desctop/core/style.dart';
+import 'package:flutter_desctop/core/utils.dart';
 import 'package:flutter_desctop/core/widgets.dart';
 import 'package:flutter_desctop/main.dart';
 import 'package:flutter_desctop/view/main/profile/local_widgets/alert_dialog.dart';
@@ -8,7 +11,9 @@ import 'package:flutter_desctop/viewModel/main/profile/referall_system_provider.
 import 'package:flutter_desctop/viewModel/user_provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:logger/logger.dart';
+import 'package:octo_image/octo_image.dart';
 import 'package:provider/provider.dart';
+// ignore: depend_on_referenced_packages
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../../../core/const.dart';
@@ -30,7 +35,7 @@ class BottomSheetProfileView extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            "Авторизация",
+            "otp_subheader".tr(),
             style: StyleTextCustom.setStyleByEnum(
               StyleTextEnum.bottomSheetHeaderText,
             ),
@@ -43,36 +48,42 @@ class BottomSheetProfileView extends StatelessWidget {
           ),
           Transform.translate(
             offset: const Offset(0, -10),
-            child: const Text(
-              "Авторизация необходима, что бы\n сохранять информацию о ваших\n подписках",
-              style: TextStyle(color: Colors.grey),
+            child:  Text(
+              "otp_subheader_description".tr(),
+              style: const TextStyle(color: Colors.grey),
               textAlign: TextAlign.center,
             ),
           ),
           const SizedBox(height: 10),
           _bottomSheetButtons(
-            FontAwesomeIcons.apple,
-            context,
-            AuthType.Apple,
-          ),
-          _bottomSheetButtons(
             FontAwesomeIcons.google,
             context,
             AuthType.Google,
+            "otp_google".tr(),
           ),
           _bottomSheetButtons(
             FontAwesomeIcons.envelope,
             context,
             AuthType.Email,
+            "otp_email".tr()
+          ),
+          _bottomSheetButtons(
+            FontAwesomeIcons.qrcode,
+            context,
+            null,
+            "otp_email".tr(),
           ),
         ],
       ),
     );
   }
 
-  Padding _bottomSheetButtons(IconData icon,
-      BuildContext context,
-      AuthType authType,) {
+  Padding _bottomSheetButtons(
+    IconData icon,
+    BuildContext context,
+    AuthType? authType,
+    String authName,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5),
       child: MaterialButton(
@@ -96,22 +107,102 @@ class BottomSheetProfileView extends StatelessWidget {
           children: [
             FaIcon(icon, size: 17),
             const SizedBox(width: 10),
-            Text("Продолжить с ${authType.name}"),
+            Text(authType == null
+                ? "use_qr_code".tr()
+                : "${"proceed_with".tr()}${authType.name}"),
           ],
         ),
       ),
     );
   }
 
-  onPressMainBottomSheetButtons(BuildContext context, AuthType authType) {
-    if (authType == AuthType.Email) {
+  onPressMainBottomSheetButtons(BuildContext context, AuthType? authType) {
+    if (authType == null) {
+      showDialog(
+        context: context,
+        builder: (_) {
+          return ChangeNotifierProvider.value(
+            value: ProfileProvider(context, true),
+            builder: (context, _) => Utils().showAlertDialogCustom(
+              title: "authorization_using_a_qr_code".tr(),
+              context: context,
+              body: Selector<ProfileProvider, String?>(
+                selector: (context, provider) => provider.getUserToken,
+                builder: (context, value, child) {
+                  if (value != null) {
+                    localDB
+                        .setString(LocalDBEnum.token.name, value)
+                        .then((value) {
+                      Navigator.pop(context, true);
+                    });
+                  }
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        height: 150,
+                        width: 150,
+                        child: Selector<ProfileProvider, String?>(
+                          selector: (context, provider) => provider.qrImage,
+                          builder: (context, image, child) {
+                            if (image != null) {
+                              image.showCustomToast();
+                              return OctoImage(
+                                image: NetworkImage(
+                                  "https://new.matreshkavpn.com/api/v1/auth/qr/image/$image",
+                                ),
+                                progressIndicatorBuilder: (context, progress) {
+                                  return  Center(
+                                    child: Text("loading...".tr()),
+                                  );
+                                },
+                                errorBuilder: (context, error, stacktrace) =>
+                                     Center(
+                                  child: Text("sorry_didn't_load_image(".tr()),
+                                ),
+                                fit: BoxFit.cover,
+                              );
+                            }
+                            return  Center(
+                              child: Text("loading...".tr()),
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        "if_you_have_previously_used_the_mobile".tr(),
+                        style: StyleTextCustom.setStyleByEnum(
+                          StyleTextEnum.bodySubTitleText,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          );
+        },
+      ).then((value) {
+        if (value != null && value) {
+          provider.setUserToDB().then((value) {
+            if (value != null) {
+              context.read<UserProvider>().setUser = value;
+              context.read<UserProvider>().isLogged = true;
+            }
+            Navigator.pop(context);
+          });
+        }
+      });
+    } else if (authType == AuthType.Email) {
       return showDialog(
         context: context,
         builder: (_) {
           return ProfileAlertDialog(
-            title: "Введите Email",
+            title: "enter_email".tr(),
             topContent:
-            "На указанный адрес электронной почты будет отправлен код подтверждения",
+                "a_confirmation_code_will_be_sent_to_the_specified_email_address".tr(),
             textFieldHintText: "example@mail.ru",
             controllerTextField: provider.emailController,
             onPress: () => onPressEmailAddress(context),
@@ -119,10 +210,8 @@ class BottomSheetProfileView extends StatelessWidget {
           );
         },
       );
-    } else if (authType == AuthType.Google) {
-      return onPressGoogleAddress(context);
     } else {
-      return;
+      return onPressGoogleAddress(context);
     }
   }
 
@@ -134,19 +223,18 @@ class BottomSheetProfileView extends StatelessWidget {
       context: context,
       builder: (context) {
         return ProfileAlertDialog(
-          title: "Введите Код",
+          title: "enter_code".tr(),
           topContent: "",
-          textFieldHintText: "Введите Код",
+          textFieldHintText: "enter_code".tr(),
           controllerTextField: provider.pinCodeEmail,
           onPress: () async {
             provider.checkEmailCode(response).then(
-                  (id) async {
+              (id) async {
                 provider.checkEmailCodeSubmit(id).then(
-                      (json) {
+                  (json) {
                     if (json == null) {
                       return;
                     }
-
                     localDB.setString(LocalDBEnum.token.name, json["token"]);
                     localDB.setString(
                       LocalDBEnum.refreshToken.name,
@@ -159,19 +247,15 @@ class BottomSheetProfileView extends StatelessWidget {
             );
           },
           bottomContent:
-          "Код был отправлен на указанный адрес электронный почты",
+              "the_code_has_been_sent_to_the_specified_email_address".tr(),
         );
       },
     ).then((value) {
       if (value != null && value) {
         provider.setUserToDB().then((value) {
           if (value != null) {
-            context
-                .read<UserProvider>()
-                .setUser = value;
-            context
-                .read<UserProvider>()
-                .isLogged = true;
+            context.read<UserProvider>().setUser = value;
+            context.read<UserProvider>().isLogged = true;
           }
           Navigator.pop(context);
         });
@@ -192,12 +276,8 @@ class BottomSheetProfileView extends StatelessWidget {
         if (value != null && value) {
           provider.setUserToDB().then((value) {
             if (value != null) {
-              context
-                  .read<UserProvider>()
-                  .setUser = value;
-              context
-                  .read<UserProvider>()
-                  .isLogged = true;
+              context.read<UserProvider>().setUser = value;
+              context.read<UserProvider>().isLogged = true;
             }
             Navigator.pop(context);
           });
@@ -225,30 +305,22 @@ class BottomSheetForQuestions extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          const CustomBottomSheetHeaderWithCloseButton(
-              headerText: "Вывод средств"),
+           CustomBottomSheetHeaderWithCloseButton(
+              headerText: "withdrawals".tr()),
           const SizedBox(height: 30),
           for (int i = 0; i < 3; i++)
             _fieldBox(
-              provider.updateList(context
-                  .read<UserProvider>()
-                  .user!
-                  .email)[i],
+              provider.updateList(context.read<UserProvider>().user!.email)[i],
             ),
           const SizedBox(height: 20),
           CustomMaterialButton(
-            text: "Отвравить запрос",
+            text: "send_request".tr(),
             onPress: () async {
-              double balance = context
-                  .read<UserProvider>()
-                  .user!
-                  .balance;
+              double balance = context.read<UserProvider>().user!.balance;
               int balanceInt = balance.toInt();
               await provider.sendQuestion(balanceInt).then((value) {
                 if (value != null) {
-                  context
-                      .read<UserProvider>()
-                      .setUser = value;
+                  context.read<UserProvider>().setUser = value;
                   Navigator.pop(context);
                 } else {}
               });

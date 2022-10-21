@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_desctop/core/const.dart';
 import 'package:flutter_desctop/core/extensions.dart';
@@ -71,7 +72,7 @@ class ReferallSystemViewChild extends StatelessWidget {
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              "Реферальная система",
+                              "referral_header".tr(),
                               style: StyleTextCustom.setStyleByEnum(
                                 StyleTextEnum.bodyHeaderText,
                               ),
@@ -89,7 +90,7 @@ class ReferallSystemViewChild extends StatelessWidget {
                             child: RichText(
                               text: TextSpan(
                                 text:
-                                    "Делись промокодом на скидку с друзьями и получай ",
+                                    "share_the_promo_code_for_a_discount_with_your_friends_and_get".tr(),
                                 style: const TextStyle(fontSize: 13),
                                 children: [
                                   TextSpan(
@@ -101,12 +102,12 @@ class ReferallSystemViewChild extends StatelessWidget {
                                     style:
                                         const TextStyle(fontWeight: FontWeight.bold),
                                   ),
-                                  const TextSpan(text: " баллов за "),
-                                  const TextSpan(
-                                    text: "каждого",
-                                    style: TextStyle(fontWeight: FontWeight.bold),
+                                   TextSpan(text: "points_for".tr()),
+                                   TextSpan(
+                                    text: "everyone".tr(),
+                                    style: const TextStyle(fontWeight: FontWeight.bold),
                                   ),
-                                  const TextSpan(text: " приглашенного друга")
+                                   TextSpan(text: "invited_friend".tr())
                                 ],
                               ),
                             ),
@@ -115,7 +116,7 @@ class ReferallSystemViewChild extends StatelessWidget {
                           Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              "Реферальный Баланс",
+                              "referral_code_label".tr(),
                               style: StyleTextCustom.setStyleByEnum(
                                 StyleTextEnum.bodyMiddleHeaderText,
                               ),
@@ -141,7 +142,7 @@ class ReferallSystemViewChild extends StatelessWidget {
                           Visibility(
                             visible: userRegister.primaryReferral,
                             child: CustomMaterialButton(
-                              text: "Вывод средств",
+                              text: "withdrawals".tr(),
                               onPress: () {
                                 final provider =
                                     context.read<ReferallSystemProvider>();
@@ -160,7 +161,7 @@ class ReferallSystemViewChild extends StatelessWidget {
                           Visibility(
                             visible: userRegister.primaryReferral,
                             child: CustomMaterialButton(
-                              text: "История вывода средств",
+                              text: "withdrawal_history".tr(),
                               onPress: () {
                                 Navigator.push(
                                   context,
@@ -184,7 +185,7 @@ class ReferallSystemViewChild extends StatelessWidget {
                         horizontal: 20,
                       ),
                       child: CustomMaterialButton(
-                        text: "Вернуться в профиль",
+                        text: "referral_back".tr(),
                         onPress: () {
                           Navigator.pop(context, 0);
                         },

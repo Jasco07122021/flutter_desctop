@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:dart_ping/dart_ping.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_desctop/core/extensions.dart';
 import 'package:flutter_desctop/model/network_model/server_list_model.dart';
 import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
@@ -61,51 +63,65 @@ class HomeProvider extends ChangeNotifier {
   }
 
   Future<void> connection(ServerItem server, String emailPassword) async {
+    isLoading = true;
+    notifyListeners();
     final checkConnectionStatus =
         await writePowerShell("Get-VpnConnection NoLogin");
+    Logger().i(checkConnectionStatus.toString());
     const splitter = LineSplitter();
     final sampleTextLines = splitter.convert(checkConnectionStatus.stdout);
     for (var i = 0; i < sampleTextLines.length; i++) {
       if (i == 12) {
         String status = sampleTextLines[i].split(":").last.trim();
-        if(status[0] == "C"){
+        if (status[0] == "C") {
           await writePowerShell("rasdial NoLogin /d");
+          isConnected = false;
+          isLoading = false;
+          notifyListeners();
           return;
         }
         break;
       }
     }
-    // String tempPath = await getPathTemp();
-    // final fileCertificate = File("$tempPath/vpnCertificate.cer");
-    // try {
-    //   await fileCertificate.create();
-    // } catch (e) {
-    //   Logger().e(e.toString());
-    //   rethrow;
-    // }
-    // await writeCertificate(fileCertificate, server.certificateFile);
-    // String lineImportCertificate =
-    //     "Import-Certificate -FilePath ${fileCertificate.path} -CertStoreLocation cert:\\LocalMachine\\Root";
-    // final resultShell = await writePowerShell(lineImportCertificate);
-    // if (resultShell.exitCode == 0) {
-    //   await fileCertificate.delete();
-    // } else {
-    //   return;
-    // }
-    // final fileVpnPbk = File("$tempPath/vpn.pbk");
-    // final findPbk = await fileVpnPbk.exists();
-    // if (findPbk) {
-    //   await fileVpnPbk.delete();
-    // }
-    // await fileVpnPbk.create();
-    // await writePbkFile(fileVpnPbk, server.address);
-    // String lineConnection = "rasdial NoLogin $emailPassword $emailPassword";
-    // final resultShell2 = await writePowerShell(lineConnection);
-    // if (resultShell2.exitCode == 0) {
-    //   Logger().i("Success");
-    // } else {
-    //   Logger().e("Fail");
-    // }
+    String tempPath = await getPathTemp();
+    final fileCertificate = File("$tempPath/vpnCertificate.cer");
+    try {
+      await fileCertificate.create();
+    } catch (e) {
+      Logger().e(e.toString());
+      rethrow;
+    }
+    await writeCertificate(fileCertificate, server.certificateFile);
+    String lineImportCertificate =
+        "Import-Certificate -FilePath ${fileCertificate.path} -CertStoreLocation cert:\\LocalMachine\\Root";
+    final resultShell = await writePowerShell(lineImportCertificate);
+    if (resultShell.exitCode == 0) {
+      await fileCertificate.delete();
+    } else {
+      isLoading = false;
+      notifyListeners();
+      return;
+    }
+    Logger().i(tempPath.toString());
+    final fileVpnPbk = File("$tempPath/vpn.pbk");
+    final findPbk = await fileVpnPbk.exists();
+    if (findPbk) {
+      await fileVpnPbk.delete();
+    }
+    await fileVpnPbk.create();
+    await writePbkFile(fileVpnPbk, server.address);
+    String lineConnection = "rasdial NoLogin $emailPassword $emailPassword";
+    final resultShell2 = await writePowerShell(lineConnection);
+    if (resultShell2.exitCode == 0) {
+      Logger().i("Success");
+      isConnected = true;
+      notifyListeners();
+    } else {
+      Logger().e("Fail");
+      "Fail".showCustomToast();
+    }
+    isLoading = false;
+    notifyListeners();
   }
 
   Future<void> writePbkFile(File fileVpnPbk, String ipAddress) async {

@@ -1,7 +1,7 @@
 enum AuthType {
-  Apple,
   Google,
   Email,
+  QrCode,
 }
 
 enum LocaleType {

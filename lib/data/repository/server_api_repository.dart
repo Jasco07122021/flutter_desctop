@@ -1,4 +1,5 @@
 
+import 'package:flutter_desctop/core/extensions.dart';
 import 'package:logger/logger.dart';
 
 import '../../main.dart';
@@ -8,16 +9,19 @@ class ServerApiRepository {
   Future<List<ServerItem>?> getServerList() async {
     try {
       String t = "/api/v1/server/";
+
       var response = await sessionApi.generalRequestGet(
         url: t,
         queryParameters: {},
       );
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         return serverListFromJson(response.body);
       }
       return null;
     } catch (e) {
       Logger().e(e.toString());
+      e.toString().showCustomToast();
       return null;
     }
   }

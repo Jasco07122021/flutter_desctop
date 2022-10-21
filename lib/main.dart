@@ -1,14 +1,17 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_desctop/core/enums.dart';
 import 'package:flutter_desctop/core/extensions.dart';
 import 'package:flutter_desctop/data/repository/auth_api_repository.dart';
 import 'package:flutter_desctop/data/repository/billing_api_repository.dart';
+import 'package:flutter_desctop/data/repository/qrCode_api_repository.dart';
 import 'package:flutter_desctop/data/repository/server_api_repository.dart';
 import 'package:flutter_desctop/data/repository/subscription_api_repository.dart';
 import 'package:flutter_desctop/data/repository/system_api_repository.dart';
 import 'package:flutter_desctop/data/repository/tariff_api_repository.dart';
 import 'package:flutter_desctop/data/repository/user_api_repository.dart';
+
 import 'package:flutter_desctop/view/splash/splash_view.dart';
 import 'package:flutter_desctop/viewModel/user_provider.dart';
 import 'package:get_it/get_it.dart';
@@ -24,9 +27,20 @@ import 'package:oktoast/oktoast.dart';
 import 'package:google_sign_in_dartio/google_sign_in_dartio.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
   await registerSingletons();
   await GoogleSignInDart.register(clientId: AuthType.Google.clientId);
-  runApp(const MyApp());
+  runApp(EasyLocalization(
+    child: MyApp(),
+    supportedLocales: [
+      Locale("ch", 'CH'),
+      Locale("ru", 'RU'),
+      Locale("us", 'US'),
+    ],
+    path: 'assets/languages',
+    fallbackLocale: Locale('us', 'US'),
+  ));
   doWhenWindowReady(() {
     final win = appWindow;
     const initialSize = Size(350, 720);
@@ -45,13 +59,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // localDB.clear();
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child: OKToast(
         child: MaterialApp(
+          localizationsDelegates: context.localizationDelegates,
+          supportedLocales: context.supportedLocales,
+          locale: context.locale,
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             brightness: Brightness.dark,
@@ -92,6 +108,8 @@ Future<void> registerSingletons() async {
   GetIt.I
       .registerLazySingleton<TariffApiRepository>(() => TariffApiRepository());
   GetIt.I.registerLazySingleton<UserApiRepository>(() => UserApiRepository());
+  GetIt.I
+      .registerLazySingleton<QrCodeApiRepository>(() => QrCodeApiRepository());
   Logger().i("registerSingletons");
 }
 
@@ -100,6 +118,8 @@ Session get sessionApi => GetIt.I.get<Session>();
 AuthApiRepository get authApi => GetIt.I.get<AuthApiRepository>();
 
 BillingApiRepository get billingApi => GetIt.I.get<BillingApiRepository>();
+
+QrCodeApiRepository get qrCodeApi => GetIt.I.get<QrCodeApiRepository>();
 
 ServerApiRepository get serverApi => GetIt.I.get<ServerApiRepository>();
 

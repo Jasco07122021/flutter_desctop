@@ -57,13 +57,13 @@ class ReferallSystemProvider extends ChangeNotifier {
     String card = bankingDetailsController.text;
     int? priceInt = int.tryParse(price);
     if (card.isEmpty) {
-      "Введите реквизиты".showCustomToast();
+      "withdraw_no_cred".showCustomToast();
       return null;
     } else if (price.isEmpty ||
         priceInt == null ||
         priceInt == 0 ||
         priceInt > balance) {
-      "Неверная сумма".showCustomToast();
+      "withdraw_wrong_sum".showCustomToast();
       return null;
     }
     Map<String, dynamic> body = {
@@ -92,15 +92,15 @@ class ReferallSystemProvider extends ChangeNotifier {
   List<Map<String, dynamic>> updateList(String email) {
     list.addAll([
       {
-        "Email": emailController..text = email,
+        "withdraw_create_email_label": emailController..text = email,
         "hintText": "example@gmail.com",
       },
       {
-        "Реквизиты": bankingDetailsController,
+        "withdraw_create_cred_label": bankingDetailsController,
         "hintText": "",
       },
       {
-        "Сумма": priceController,
+        "withdraw_create_sum_label": priceController,
         "hintText": "150\$",
       },
     ]);

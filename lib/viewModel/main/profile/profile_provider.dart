@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_desctop/core/enums.dart';
 import 'package:flutter_desctop/core/extensions.dart';
@@ -7,6 +10,9 @@ import 'package:flutter_desctop/viewModel/user_provider.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:stomp_dart_client/stomp.dart';
+import 'package:stomp_dart_client/stomp_config.dart';
+import 'package:stomp_dart_client/stomp_frame.dart';
 
 import '../main_provider.dart';
 
@@ -16,20 +22,83 @@ class ProfileProvider extends ChangeNotifier {
   TextEditingController dateController = TextEditingController();
   TextEditingController pinCodeEmail = TextEditingController();
 
+  StompClient? stompClient;
+  Timer? timer;
+
+  String? getUserToken;
+
   List<Map<String, TextEditingController>> list = [];
   int hoverBox = 0;
   bool showCancellationBox = false;
 
   String navigateItem = "";
+  String? qrImage;
 
   bool loading = false;
+  bool loadingQrCode = false;
   String deviceId = localDB.getString(LocalDBEnum.deviceId.name)!;
 
-  ProfileProvider(BuildContext context) {
-    checkData(context);
+  ProfileProvider(BuildContext context, bool isUpdate) {
+    if (isUpdate) {
+      openQrCode(context);
+    } else {
+      checkData(context);
+    }
   }
 
-  checkData(BuildContext context) async {
+  openQrCode(BuildContext context) async {
+    String id = localDB.getString(LocalDBEnum.deviceId.name) ?? "";
+    loadingQrCode = true;
+    notifyListeners();
+    final response = await qrCodeApi.qrStart({"id": id});
+    if (response != null) {
+      qrImage = response["id"];
+      notifyListeners();
+    }
+    stompClient = StompClient(
+      config: StompConfig(
+        url: 'ws://new.matreshkavpn.com/ws',
+        onConnect: onConnected,
+        onWebSocketError: (e) => Logger().e(e.toString()),
+        onStompError: (d) => Logger().e('error stomp'),
+        onDisconnect: (f) => Logger().w('disconnected'),
+      ),
+    );
+    stompClient!.activate();
+    loadingQrCode = false;
+    notifyListeners();
+    Logger().i(response.toString());
+  }
+
+  void onConnected(StompFrame frame) {
+    Logger().i(qrImage.toString());
+    stompClient!.subscribe(
+      destination: '/topic/qrauth/response/$qrImage',
+      callback: (frame) {
+        if (frame.body != null) {
+          final token = json.decode(frame.body!)["token"];
+          print(frame.body.toString());
+          getUserToken = token;
+          if (timer != null) {
+            timer!.cancel();
+          }
+          notifyListeners();
+        }
+        Logger().i("response");
+      },
+    );
+
+    timer = Timer.periodic(const Duration(seconds: 10), (_) {
+      stompClient!.send(
+        destination: '/topic/qrauth/response/$qrImage',
+      );
+      if (getUserToken != null) {
+        timer!.cancel();
+      }
+    });
+  }
+
+  void checkData(BuildContext context) async {
     UserProvider userProvider = Provider.of<UserProvider>(
       context,
       listen: false,
@@ -48,7 +117,7 @@ class ProfileProvider extends ChangeNotifier {
         DateTime newTime = DateTime(time.year, time.month, time.day + 3);
         String newDate = DateFormat("dd.MM.yyyy").format(newTime);
 
-        planController.text = result.name!;
+        planController.text = result.name ?? "";
         dateController.text = newDate;
       } else {
         DateTime time = DateTime.parse(userProvider.user!.createdAt);
@@ -119,9 +188,10 @@ class ProfileProvider extends ChangeNotifier {
       };
       final json = await authApi.google(body);
       if (json != null) {
-        localDB.setString(LocalDBEnum.deviceId.name, deviceId);
-        localDB.setString(LocalDBEnum.token.name, json["token"]);
-        localDB.setString(LocalDBEnum.refreshToken.name, json["refreshToken"]);
+        await localDB.setString(LocalDBEnum.deviceId.name, deviceId);
+        await localDB.setString(LocalDBEnum.token.name, json["token"]);
+        await localDB.setString(
+            LocalDBEnum.refreshToken.name, json["refreshToken"]);
         return true;
       } else {
         return null;
@@ -133,9 +203,9 @@ class ProfileProvider extends ChangeNotifier {
 
   List<Map<String, TextEditingController>> updateList() {
     list.addAll([
-      {"Email": emailController},
-      {"Текущий план": planController},
-      {"Дата оконачния плана": dateController},
+      {"profile_email_label": emailController},
+      {"profile_plan_label": planController},
+      {"profile_plan_date_label": dateController},
     ]);
     return list;
   }
@@ -155,13 +225,19 @@ class ProfileProvider extends ChangeNotifier {
   Future<bool> deleteUser() async {
     loading = true;
     notifyListeners();
-    final response = await userApi.deleteUser();
-    if (response) {
-      await localDB.clear();
+    final token = localDB.getString(LocalDBEnum.token.name);
+    if (token != null) {
+      final response = await userApi.deleteUser(token);
+      if (response) {
+        await localDB.clear();
+      }
+      loading = false;
+      notifyListeners();
+      return response;
     }
     loading = false;
     notifyListeners();
-    return response;
+    return false;
   }
 
   @override
@@ -170,6 +246,8 @@ class ProfileProvider extends ChangeNotifier {
     pinCodeEmail.dispose();
     dateController.dispose();
     planController.dispose();
+    if (timer != null) timer!.cancel();
+    if (stompClient != null) stompClient!.deactivate();
     super.dispose();
   }
 }

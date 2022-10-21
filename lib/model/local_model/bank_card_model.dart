@@ -12,8 +12,8 @@ class BankCard {
 List<BankCard> listBankCard = [
   BankCard(
     "assets/icons/bank_card.png",
-    "Банковская карта",
-    " Мир, Visa, MasterCard, Union Pay ",
+    "select_plan_card_title",
+    "select_plan_card_desc",
     const Color.fromRGBO(9, 152, 212, 0.140734),
   ),
   // BankCard(

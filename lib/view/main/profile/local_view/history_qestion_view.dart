@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_desctop/core/const.dart';
 import 'package:flutter_desctop/core/enums.dart';
@@ -80,7 +81,7 @@ class _HistoryQuestionViewState extends State<_HistoryQuestionView> {
                             child: Align(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                "Запросы",
+                                "withdraw_history_header".tr(),
                                 style: StyleTextCustom.setStyleByEnum(
                                   StyleTextEnum.bodyHeaderText,
                                 ),
@@ -127,7 +128,7 @@ class _HistoryQuestionViewState extends State<_HistoryQuestionView> {
                             horizontal: 20,
                           ),
                           child: CustomMaterialButton(
-                            text: "Вернуться в профиль",
+                            text: "referral_back".tr(),
                             onPress: () {
                               Navigator.pop(context, 1);
                             },
@@ -158,19 +159,19 @@ class _HistoryQuestionViewState extends State<_HistoryQuestionView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _headerTitle(
-              "STATUS",
+              "STATUS".tr(),
               datum.state,
             ),
             _headerTitle(
-              "CARD",
+              "CARD".tr(),
               datum.card,
             ),
             _headerTitle(
-              "COUNT",
+              "COUNT".tr(),
               "${datum.count}",
             ),
             _headerTitle(
-              "EMAIL",
+              "EMAIL".tr(),
               datum.email,
             ),
           ],

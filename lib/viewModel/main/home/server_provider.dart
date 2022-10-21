@@ -8,11 +8,13 @@ class ServerProvider extends ChangeNotifier {
   int hoverIndex = -1;
   bool isLoading = false;
 
+
   List<ServerItem> servers = [];
 
   ServerProvider() {
     getServerList();
   }
+
 
   Future getServerList() async {
     isLoading = true;

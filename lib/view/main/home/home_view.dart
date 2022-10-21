@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_desctop/core/extensions.dart';
@@ -14,16 +15,26 @@ import 'package:provider/provider.dart';
 import '../../../core/enums.dart';
 import '../../../viewModel/main/home/home_provider.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
 
   @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView>
+    with AutomaticKeepAliveClientMixin<HomeView> {
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return ChangeNotifierProvider(
       create: (_) => HomeProvider(),
       builder: (context, _) => const _HomeView(),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class _HomeView extends StatelessWidget {
@@ -43,50 +54,72 @@ class _HomeView extends StatelessWidget {
         return Navigator(
           pages: [
             MaterialPage(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 20,
-                  horizontal: 20,
-                ),
-                child: Column(
-                  children: [
-                    Image.asset(
-                      "assets/icons/logo.png",
-                      height: 27.0,
-                    ),
-                    const SizedBox(height: 25),
-                    MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      child: GestureDetector(
-                        onTap: () async {
-                          String? url = context
-                              .read<UserProvider>()
-                              .systemData
-                              ?.bannerRedirect;
-                          if (url != null) {
-                            url.launchWeb();
-                          }
-                        },
-                        child: OctoImage(
-                          image: const NetworkImage(
-                            "https://new.matreshkavpn.com/api/v1/system/ad-image",
-                          ),
-                          progressIndicatorBuilder: (context, progress) {
-                            return const SizedBox.shrink();
-                          },
-                          errorBuilder: (context, error, stacktrace) =>
-                              const SizedBox.shrink(),
+              child: Selector<HomeProvider, bool>(
+                selector: (context, provider) => provider.isLoading,
+                builder: (context, value, _) {
+                  return Stack(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 20,
+                          horizontal: 20,
+                        ),
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              "assets/icons/logo.png",
+                              height: 27.0,
+                            ),
+                            const SizedBox(height: 20),
+                            if (value)
+                              const LinearProgressIndicator(
+                                color: Colors.blue,
+                                backgroundColor: Colors.yellow,
+                              ),
+                            const SizedBox(height: 5),
+                            MouseRegion(
+                              cursor: SystemMouseCursors.click,
+                              child: GestureDetector(
+                                onTap: () async {
+                                  String? url = context
+                                      .read<UserProvider>()
+                                      .systemData
+                                      ?.bannerRedirect;
+                                  if (url != null) {
+                                    url.launchWeb();
+                                  }
+                                },
+                                child: OctoImage(
+                                  image: const NetworkImage(
+                                    "https://new.matreshkavpn.com/api/v1/system/ad-image",
+                                  ),
+                                  progressIndicatorBuilder:
+                                      (context, progress) {
+                                    return const SizedBox.shrink();
+                                  },
+                                  errorBuilder: (context, error, stacktrace) =>
+                                      const SizedBox.shrink(),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 30),
+                            SpeedBox(userProvider: userProvider),
+                            const Spacer(),
+                            const PowerButton(),
+                            const Spacer(),
+                            _city(context, userProvider),
+                          ],
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 30),
-                    const SpeedBox(),
-                    const Spacer(),
-                    const PowerButton(),
-                    const Spacer(),
-                    _city(context, userProvider),
-                  ],
-                ),
+                      if (value)
+                        Container(
+                          height: double.infinity,
+                          width: double.infinity,
+                          color: Colors.transparent,
+                        ),
+                    ],
+                  );
+                },
               ),
             ),
             if (openServerView) const MaterialPage(child: ServerView()),
@@ -150,7 +183,7 @@ class _HomeView extends StatelessWidget {
                       Text(
                         userProvider.server != null
                             ? userProvider.server!.city
-                            : "Нет",
+                            : "no".tr(),
                         style: const TextStyle(
                           fontSize: 12,
                           color: Colors.grey,
@@ -158,13 +191,13 @@ class _HomeView extends StatelessWidget {
                       ),
                       Text(userProvider.server != null
                           ? userProvider.server!.country
-                          : "Выберите сервер"),
-                    ],
+                          : "select_server_text".tr(),
+                      )],
                   ),
                 ),
-                const Text(
-                  "Выбрать",
-                  style: TextStyle(color: Colors.blue),
+                 Text(
+                  "connect_select_server_right".tr(),
+                  style: const TextStyle(color: Colors.blue),
                 ),
                 const Icon(
                   CupertinoIcons.right_chevron,

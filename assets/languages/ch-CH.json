@@ -55,7 +55,6 @@
   "referral_back": "返回个人资料",
   "referral_withdraw": "兑现 ",
   "servers_header": "服务器 ",
-  "server_tick": "小姐 ",
   "nav_main": "家 ",
   "nav_sub": "订阅 ",
   "nav_profile": "轮廓 ",
@@ -146,6 +145,6 @@
   "premium": "溢价",
   "enter_promo_code": "输入促销代码",
   "get_free": "获得免费",
-  "0GB": "0GB",
-  "0MB": "0MB"
+  "get":"得到",
+  "server_tick": "小姐 "
 }

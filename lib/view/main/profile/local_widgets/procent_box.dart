@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_desctop/core/widgets.dart';
 import 'package:flutter_desctop/viewModel/main/profile/referall_system_provider.dart';
@@ -82,7 +83,7 @@ class PercentBox extends StatelessWidget {
                     backgroundColor: Colors.black.withOpacity(0.3),
                   )
                 : CustomMaterialButton(
-                    text: 'Получить',
+                    text: 'get'.tr(),
                     onPress: () {
                       context
                           .read<ReferallSystemProvider>()

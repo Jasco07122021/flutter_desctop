@@ -33,6 +33,7 @@ Future<void> main() async {
   await GoogleSignInDart.register(clientId: AuthType.Google.clientId);
   runApp(EasyLocalization(
     child: MyApp(),
+
     supportedLocales: [
       Locale("ch", 'CH'),
       Locale("ru", 'RU'),

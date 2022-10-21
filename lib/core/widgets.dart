@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_desctop/core/style.dart';
 import 'package:flutter_desctop/viewModel/main/main_provider.dart';
@@ -49,20 +50,20 @@ class BottomNavBar extends StatelessWidget {
       height: 80,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: const [
+        children:  [
           BottomNavBarItem(
             img: "assets/icons/bottomNav1.png",
-            text: "Главная",
+            text: "nav_main".tr(),
             index: 0,
           ),
           BottomNavBarItem(
             img: "assets/icons/bottomNav2.png",
-            text: "Подписка",
+            text: "nav_sub".tr(),
             index: 1,
           ),
           BottomNavBarItem(
             img: "assets/icons/bottomNav3.png",
-            text: "Профиль",
+            text: "nav_profile".tr(),
             index: 2,
           ),
         ],

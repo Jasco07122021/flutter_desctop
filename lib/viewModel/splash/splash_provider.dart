@@ -14,10 +14,14 @@ class SplashProvider extends ChangeNotifier {
   Future<dynamic> checkUserAuth() async {
     try {
       // final String? uid = localDB.getString("wallet_box_uid");
+      // final String? token =
+      //     "eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbiI6ImRldmdpcGF0QGdtYWlsLmNvbSIsImlkIjoiNWYxMjEyNjctMGU5YS00YWMxLTg2YjItMDhkMTQ0OTZmNzNiIiwiZXhwIjoxNjk2ODk2MDAwfQ.g3Q28QLxIGlJQh2z5Vb0t9RVpitwEZNSk92JSTLhD58nqVKvzpkU-nu13mzjtaeiB9RATq06u-vvoPwR6dfmbA";
       final String? token = localDB.getString(LocalDBEnum.token.name);
 
       if (token != null) {
         UserRegister? user = await userApi.getUserMe(token);
+        WindowsDeviceInfo info = await DeviceInfoPlugin().windowsInfo;
+        await localDB.setString(LocalDBEnum.deviceId.name, info.computerName);
         if (user != null) {
           return user;
         }

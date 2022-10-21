@@ -16,10 +16,6 @@ class ServerItem {
     required this.country,
     this.countryCode,
     required this.city,
-    required this.nowClients,
-    required this.maxClients,
-    required this.lastUpdate,
-    this.enabled,
     required this.address,
     required this.certificateFile,
   });
@@ -28,10 +24,6 @@ class ServerItem {
   final String country;
   final String? countryCode;
   final String city;
-  final int nowClients;
-  final int maxClients;
-  final DateTime lastUpdate;
-  bool? enabled;
   final String address;
   final String certificateFile;
 
@@ -40,10 +32,6 @@ class ServerItem {
         country: json["country"],
         countryCode: json["countryCode"],
         city: json["city"],
-        nowClients: json["nowClients"],
-        maxClients: json["maxClients"],
-        lastUpdate: DateTime.parse(json["lastUpdate"]),
-        enabled: json["enabled"],
         address: json["address"],
         certificateFile: json["certificateFile"],
       );
@@ -53,10 +41,6 @@ class ServerItem {
         "country": country,
         "countryCode": countryCode,
         "city": city,
-        "nowClients": nowClients,
-        "maxClients": maxClients,
-        "lastUpdate": lastUpdate.toIso8601String(),
-        "enabled": enabled,
         "address": address,
         "certificateFile": certificateFile,
       };

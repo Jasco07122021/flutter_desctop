@@ -191,14 +191,14 @@ class Session {
     Код ответа: ${response.statusCode}
     """);
 
-    if (response.statusCode == 403) {
-      _alert.setVisible = true;
-    }
+    // if (response.statusCode == 403) {
+    //   _alert.setVisible = true;
+    // }
 
-    if (response.statusCode == 502) {
-      _alert.setError =
-          "В работе приложения произошла ошибка,\nмы уже работает над ее устранением!";
-    }
+    // if (response.statusCode == 502) {
+    //   _alert.setError =
+    //       "В работе приложения произошла ошибка,\nмы уже работает над ее устранением!";
+    // }
 
     return response;
   }

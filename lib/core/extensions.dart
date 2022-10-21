@@ -33,8 +33,8 @@ extension PriceRubl on String {
 extension LoginProviderExtension on AuthType {
   String get key {
     switch (this) {
-      case AuthType.Apple:
-        return 'apple';
+      case AuthType.QrCode:
+        return 'qrCode';
       case AuthType.Google:
         return 'google';
       case AuthType.Email:
@@ -44,7 +44,7 @@ extension LoginProviderExtension on AuthType {
 
   String get authorizationEndpoint {
     switch (this) {
-      case AuthType.Apple:
+      case AuthType.QrCode:
         return "";
 
       case AuthType.Google:
@@ -57,7 +57,7 @@ extension LoginProviderExtension on AuthType {
 
   String get tokenEndpoint {
     switch (this) {
-      case AuthType.Apple:
+      case AuthType.QrCode:
         return "";
       case AuthType.Google:
         return "https://oauth2.googleapis.com/token";
@@ -68,7 +68,7 @@ extension LoginProviderExtension on AuthType {
 
   String get clientId {
     switch (this) {
-      case AuthType.Apple:
+      case AuthType.QrCode:
         return "";
       case AuthType.Google:
         return "703763335359-vi0ai78lu0d550evue3cf6jis55a9aj2.apps.googleusercontent.com";
@@ -79,7 +79,7 @@ extension LoginProviderExtension on AuthType {
 
   String? get clientSecret {
     switch (this) {
-      case AuthType.Apple:
+      case AuthType.QrCode:
         return "";
       case AuthType.Google:
         return "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";

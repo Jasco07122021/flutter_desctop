@@ -67,34 +67,50 @@ class _PowerButtonState extends State<PowerButton>
             },
             child: GestureDetector(
               onTap: () async {
-                final userProvider = context.read<UserProvider>();
-                ServerItem? server = userProvider.server;
-                if (server == null) {
-                  return;
-                }
-                context.read<HomeProvider>().connection(
-                      server,
-                      userProvider.user == null
-                          ? userProvider.deviceId!
-                          : userProvider.user!.email,
-                    );
+                // await Process.run('powershell.exe', ["Get-WinSystemLocale"]).then((value) => Logger().i(value.stdout));
+                // final userProvider = context.read<UserProvider>();
+                // ServerItem? server = userProvider.server;
+                // Logger().i(server.toString());
+                // if (server == null) {
+                //   return;
+                // }
+                // context.read<HomeProvider>().connection(
+                //       server,
+                //       userProvider.user == null
+                //           ? userProvider.deviceId!
+                //           : userProvider.user!.email,
+                //     );
               },
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 500),
-                height: 150,
-                width: 150,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: mainColorBackground,
-                  border: Border.all(
-                    color:
-                        state ? Colors.white : Colors.white.withOpacity(0.15),
-                  ),
-                ),
-                child: const Icon(
-                  CupertinoIcons.power,
-                  size: 30,
-                ),
+              child: Selector<HomeProvider, bool>(
+                selector: (_, bloc) => bloc.isConnected,
+                builder: (context, connected, _) {
+                  if (connected) {
+                    animationController.stop();
+                  } else {
+                    animationController.repeat(reverse: true);
+                  }
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 500),
+                    height: 150,
+                    width: 150,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: mainColorBackground,
+                      border: Border.all(
+                        color: state
+                            ? Colors.white
+                            : connected
+                                ? Colors.green
+                                : Colors.white.withOpacity(0.15),
+                        width: connected ? 5 : 1,
+                      ),
+                    ),
+                    child: const Icon(
+                      CupertinoIcons.power,
+                      size: 30,
+                    ),
+                  );
+                },
               ),
             ),
           );

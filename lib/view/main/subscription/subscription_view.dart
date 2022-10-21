@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_desctop/core/widgets.dart';
 import 'package:flutter_desctop/model/network_model/tariff_list_model.dart';
@@ -39,23 +40,21 @@ class _SubscriptionView extends StatelessWidget {
                   width: 200,
                 ),
                 const SizedBox(height: 15),
-                const TitleWithSubTitleBox(
-                  title: "Защита ваших данных",
-                  subTitle:
-                      "Посещайте любые сайты, каторые хотите. Ваши данные надежно защищены от слежки.",
+                 TitleWithSubTitleBox(
+                  title: "sub_info_1_header".tr(),
+                  subTitle: "sub_info_1_description".tr(),
                   icon: "assets/icons/shield.png",
                 ),
                 const SizedBox(height: 15),
-                const TitleWithSubTitleBox(
-                  title: "Устойчивое и быстрое соединение",
-                  subTitle: "Качайте файлы, смотрите видео, слушайте музыку - быстро и без ограничений",
+                 TitleWithSubTitleBox(
+                  title: "sub_info_3_header".tr(),
+                  subTitle: "sub_info_3_description".tr(),
                   icon: "assets/icons/flash.png",
                 ),
                 const SizedBox(height: 15),
-                const TitleWithSubTitleBox(
-                  title: "Безопасность и приватность",
-                  subTitle:
-                      "Пользуйтесь своими любимыми сервисами и заходите на привычные сайты как раньше!",
+                 TitleWithSubTitleBox(
+                  title: "sub_info_2_header".tr(),
+                  subTitle: "sub_info_3_description".tr(),
                   icon: "assets/icons/flash.png",
                 ),
                 const SizedBox(height: 15),
@@ -81,8 +80,8 @@ class _SubscriptionView extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        _bottomTextButtonItem("Публичная оферта"),
-        _bottomTextButtonItem("Политика Конфиденциальности"),
+        _bottomTextButtonItem("sub_oferta".tr()),
+        _bottomTextButtonItem("sub_conf".tr()),
       ],
     );
   }

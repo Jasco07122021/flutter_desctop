@@ -60,8 +60,13 @@ class _MainView extends StatelessWidget {
           Expanded(
             child: Selector<MainProvider, int>(
               selector: (_, bloc) => bloc.index,
-              builder: (context, state, _) =>
-                  context.read<MainProvider>().listViews[state],
+              builder: (context, state, _) {
+                return PageView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  controller: context.read<MainProvider>().pageController,
+                  children: context.read<MainProvider>().listViews,
+                );
+              },
             ),
           ),
         ],

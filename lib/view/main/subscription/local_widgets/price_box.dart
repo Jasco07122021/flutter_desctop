@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_desctop/core/const.dart';
 import 'package:flutter_desctop/core/extensions.dart';
@@ -67,7 +68,7 @@ class PriceBox extends StatelessWidget {
                   ),
             minLeadingWidth: 10,
             title: Text(
-              tariffItem == null ? "Получить Бесплатно" : tariffItem!.name,
+              tariffItem == null ? "get_free".tr() : tariffItem!.name,
               style: const TextStyle(
                 fontWeight: FontWeight.w700,
                 fontSize: 14,
@@ -94,7 +95,7 @@ class PriceBox extends StatelessWidget {
                 borderRadius: BorderRadius.circular(50),
               ),
               child: Text(
-                "Скидка: ${tariffItem!.discount}%",
+                "${"discount".tr()}: ${tariffItem!.discount}%",
                 style: const TextStyle(
                   fontSize: 11,
                 ),

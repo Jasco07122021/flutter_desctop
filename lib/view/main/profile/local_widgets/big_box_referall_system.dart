@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -58,7 +59,7 @@ class BigBoxReferallSystem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Скидка",
+                  "discount".tr(),
                   style: StyleTextCustom.setStyleByEnum(
                     StyleTextEnum.bottomSheetBodyText,
                   ),
@@ -80,7 +81,7 @@ class BigBoxReferallSystem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "По помокоду",
+                  "by_pomocode".tr(),
                   style: StyleTextCustom.setStyleByEnum(
                     StyleTextEnum.bottomSheetBodyText,
                   ),

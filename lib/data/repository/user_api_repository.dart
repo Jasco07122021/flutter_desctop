@@ -86,8 +86,9 @@ class UserApiRepository {
     }
   }
 
-  Future<bool> deleteUser() async {
+  Future<bool> deleteUser(String token) async {
     try {
+      sessionApi.setToken(token: token);
       String t = "/api/v1/user/";
       var response = await sessionApi.generalRequestDelete(url: t);
       if (response.statusCode == 200) {

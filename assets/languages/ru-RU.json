@@ -54,7 +54,6 @@
   "referral_back": "Вернуться в профиль",
   "referral_withdraw": "Обналичить",
   "servers_header": "Сервера",
-  "server_tick": "мс",
   "nav_main": "Главная",
   "nav_sub": "Подписка",
   "nav_profile": "Профиль",
@@ -144,7 +143,6 @@
   "premium": "премиум",
   "enter_promo_code": "Введите промокод",
   "get_free": "Получить Бесплатно",
-  "0GB": "0ГБ",
-  "0MB": "0MБ"
-
+  "get":"Получить",
+  "server_tick": "мс"
 }

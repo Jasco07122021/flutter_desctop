@@ -225,7 +225,7 @@ class _ServerView extends StatelessWidget {
                           ),
                           const SizedBox(width: 5),
                           Text(
-                            "${ping ?? 0} server_tick",
+                            "${ping ?? 0} server_tick".tr(),
                             style: const TextStyle(fontSize: 12),
                           ),
                         ],

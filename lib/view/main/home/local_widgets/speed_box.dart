@@ -1,11 +1,7 @@
-import 'package:dart_ping/dart_ping.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_desctop/viewModel/main/home/home_provider.dart';
 import 'package:flutter_desctop/viewModel/user_provider.dart';
-import 'package:logger/logger.dart';
-import 'package:provider/provider.dart';
 
 import '../../../../core/const.dart';
 
@@ -20,13 +16,13 @@ class SpeedBox extends StatelessWidget {
       children:  [
         SpeedBoxItem(
           header: "traffic_download".tr(),
-          speed: "0GB".tr(),
+          speed: "0 ГБ",
           color: Colors.red,
         ),
-        SizedBox(width: 30),
+      const  SizedBox(width: 30),
         SpeedBoxItem(
           header: "traffic_upload".tr(),
-          speed: "0MB".tr(),
+          speed: "0 МБ",
           color: Colors.green,
         ),
       ],

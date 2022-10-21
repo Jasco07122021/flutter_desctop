@@ -54,7 +54,6 @@
   "referral_back": "Back to Profile",
   "referral_withdraw": "Withdraw",
   "servers_header": "Servers",
-  "server_tick": "ms",
   "nav_main": "Main",
   "nav_sub": "Subscription",
   "nav_profile": "Profile",
@@ -145,6 +144,6 @@
   "premium": "premium",
   "enter_promo_code": "Enter promo code",
   "get_free": "Get Free",
-  "0GB": "0GB",
-  "0MB": "0MB"
+  "get":"Get",
+  "server_tick": "ms"
 }

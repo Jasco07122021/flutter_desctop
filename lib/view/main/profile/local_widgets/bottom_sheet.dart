@@ -109,7 +109,7 @@ class BottomSheetProfileView extends StatelessWidget {
             const SizedBox(width: 10),
             Text(authType == null
                 ? "use_qr_code".tr()
-                : "${"proceed_with".tr()}${authType.name}"),
+                : "${"proceed_with".tr()} ${authType.name}"),
           ],
         ),
       ),

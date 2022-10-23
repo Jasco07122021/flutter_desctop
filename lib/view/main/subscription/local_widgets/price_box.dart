@@ -68,7 +68,7 @@ class PriceBox extends StatelessWidget {
                   ),
             minLeadingWidth: 10,
             title: Text(
-              tariffItem == null ? "get_free".tr() : tariffItem!.name,
+              tariffItem == null ? "get_free".tr() : (tariffItem!.name).tr(),
               style: const TextStyle(
                 fontWeight: FontWeight.w700,
                 fontSize: 14,

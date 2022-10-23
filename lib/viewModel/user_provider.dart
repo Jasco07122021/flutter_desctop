@@ -14,14 +14,25 @@ class UserProvider extends ChangeNotifier {
   UserRegister? _user;
   SystemData? _systemData;
   ServerItem? _server;
+  String? _locale;
 
   UserRegister? get user => _user;
+
   SystemData? get systemData => _systemData;
+
   String? get deviceId => _deviceId;
+
+  String? get locale => _locale;
+
   ServerItem? get server => _server;
 
   set setUser(UserRegister? human) {
     _user = human;
+    notifyListeners();
+  }
+
+  set setLocale(String locale) {
+    _locale = locale;
     notifyListeners();
   }
 

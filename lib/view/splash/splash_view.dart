@@ -44,6 +44,8 @@ class _SplashViewState extends State<SplashView> {
     Timer(
       const Duration(milliseconds: 700),
       () async {
+        String? locale = localDB.getString(LocalDBEnum.locale.name);
+        context.read<UserProvider>().setLocale = locale ?? "en";
         context.read<SplashProvider>().checkSystemData().then((value) {
           if (value != null) {
             context.read<UserProvider>().setSystemData = value;

@@ -15,6 +15,7 @@ enum LocalDBEnum {
   refreshToken,
   deviceId,
   result,
+  locale,
 }
 
 enum StyleTextEnum {

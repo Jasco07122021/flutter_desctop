@@ -144,5 +144,9 @@
   "exit": "Exit\n",
   "premium": "premium",
   "enter_promo_code": "Enter promo code",
-  "get_free": "Get Free"
+  "get_free": "Get Free",
+
+  "1 Месяц":"1 Month",
+  "3 Месяца":"3 Months",
+  "1 Год":"1 Year"
 }

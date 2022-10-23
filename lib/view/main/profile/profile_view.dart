@@ -7,6 +7,7 @@ import 'package:flutter_desctop/core/const.dart';
 import 'package:flutter_desctop/core/extensions.dart';
 import 'package:flutter_desctop/core/style.dart';
 import 'package:flutter_desctop/core/widgets.dart';
+import 'package:flutter_desctop/main.dart';
 import 'package:flutter_desctop/view/splash/splash_view.dart';
 import 'package:flutter_desctop/viewModel/main/profile/profile_provider.dart';
 import 'package:flutter_desctop/viewModel/user_provider.dart';
@@ -45,7 +46,6 @@ class _ProfileViewBody extends StatelessWidget {
               children: [
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       "profile_header".tr(),
@@ -53,6 +53,38 @@ class _ProfileViewBody extends StatelessWidget {
                         StyleTextEnum.bodyHeaderText,
                       ),
                     ),
+                    const Spacer(),
+                    MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onTap: () {
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              top: 20,
+                              bottom: 40,
+                              right: 0,
+                              left: 10,
+                            ),
+                            child: Wrap(
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.only(right: 20),
+                                  child: CustomBottomSheetHeaderWithCloseButton(
+                                    headerText: "Language",
+                                  ),
+                                ),
+                                const SizedBox(height: 40),
+                                _languageBox(text: "English", locale: "en"),
+                                _languageBox(text: "Русский", locale: "ru"),
+                                _languageBox(text: "China", locale: "zh"),
+                              ],
+                            ),
+                          ).addBottomSheet(context);
+                        },
+                        child: const Icon(Icons.language),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
                     MouseRegion(
                       cursor: SystemMouseCursors.click,
                       child: GestureDetector(
@@ -118,6 +150,44 @@ class _ProfileViewBody extends StatelessWidget {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  ListTile _languageBox({
+    required String text,
+    required String locale,
+  }) {
+    return ListTile(
+      title: Text(text),
+      trailing: Transform.scale(
+        scale: 0.8,
+        child: Selector<UserProvider, String?>(
+          selector: (_, provider) => provider.locale,
+          builder: (context, localeDB, _) {
+            bool isActive = locale == localeDB;
+            return CupertinoSwitch(
+              value: isActive,
+              onChanged: (v) async {
+                if (v) {
+                  await context.setLocale(Locale(
+                    locale,
+                    locale == "en"
+                        ? "US"
+                        : locale == "ru"
+                            ? "RU"
+                            : "CN",
+                  ));
+                  await localDB
+                      .setString(LocalDBEnum.locale.name, locale)
+                      .then((value) {
+                    context.read<UserProvider>().setLocale = locale;
+                  });
+                }
+              },
+            );
+          },
         ),
       ),
     );

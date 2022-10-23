@@ -42,7 +42,7 @@ class PercentBox extends StatelessWidget {
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    tariffItem.name,
+                    tariffItem.name.tr(),
                     style: GoogleFonts.varelaRound(
                       fontWeight: FontWeight.bold,
                     ),

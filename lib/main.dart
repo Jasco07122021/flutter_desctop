@@ -31,16 +31,24 @@ Future<void> main() async {
   await EasyLocalization.ensureInitialized();
   await registerSingletons();
   await GoogleSignInDart.register(clientId: AuthType.Google.clientId);
-  runApp(EasyLocalization(
-    supportedLocales: const[
-      Locale("ch", 'CH'),
-      Locale("ru", 'RU'),
-      Locale("en", 'US'),
-    ],
-    path: 'assets/languages',
-    fallbackLocale: const Locale('en', 'US'),
-    child: const MyApp(),
-  ));
+
+  String? locale = localDB.getString(LocalDBEnum.locale.name);
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [
+        Locale("zh", 'CN'),
+        Locale("ru", 'RU'),
+        Locale("en", 'US'),
+      ],
+      path: 'assets/languages',
+      fallbackLocale: locale == null || locale == "en"
+          ? const Locale('en', 'US')
+          : locale == "ru"
+              ? const Locale("ru", 'RU')
+              : const Locale("zh", 'CN'),
+      child: const MyApp(),
+    ),
+  );
   doWhenWindowReady(() {
     final win = appWindow;
     const initialSize = Size(350, 720);
@@ -65,6 +73,7 @@ class MyApp extends StatelessWidget {
       ],
       child: OKToast(
         child: MaterialApp(
+          useInheritedMediaQuery: true,
           localizationsDelegates: context.localizationDelegates,
           supportedLocales: context.supportedLocales,
           locale: context.locale,

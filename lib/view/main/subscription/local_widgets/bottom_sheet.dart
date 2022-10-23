@@ -24,7 +24,7 @@ class BottomSheetSubscriptionView extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           CustomBottomSheetHeaderWithCloseButton(
-            headerText: "${tariffItem.name}" "premium".tr(),
+            headerText: tariffItem.name.tr() + " premium".tr(),
           ),
           const SizedBox(height: 25),
           Row(
